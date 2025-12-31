@@ -35,7 +35,7 @@
 /* Private typedef -----------------------------------------------------------*/
 /* USER CODE BEGIN PTD */
 typedef struct can_msg_wrapper {
-  uint32_t ExtId;
+  uint32_t Reason;
   uint8_t *data;
 } CANMsgWrapper;
 /* USER CODE END PTD */
@@ -183,8 +183,8 @@ void txCANTask(void *argument)
     .StdId = 0,
     .IDE = CAN_ID_EXT,
     .RTR = 0,
-    .DLC = 8,
-    .TransmitGlobalTime = DISABLE
+    .DLC = 8, // 8 bytes data important
+    .TransmitGlobalTime = DISABLE // worthless
   };
   /* Infinite loop */
   for(;;)
@@ -192,7 +192,8 @@ void txCANTask(void *argument)
     if (osMutexAcquire(CANMutexHandle, osWaitForever) == osOK) {
       CANMsgWrapper msg;
       osMessageQueueGet(CANTxQueueHandle, &msg, NULL, osWaitForever);
-      tx_header.ExtId = msg.ExtId;
+      // Construct header according to CAN ID spec
+      tx_header.ExtId = CAN_BUS_ID | DATA_BOX_ID | msg.Reason;
       HAL_CAN_AddTxMessage(&hcan1, &tx_header, msg.data, NULL);
       osMutexRelease(CANMutexHandle);
     }
@@ -211,7 +212,7 @@ void sendHeartbeatTask(void *arg) {
   uint8_t data[8];
   
   CANMsgWrapper msg = {
-    .ExtId = CAN_BUS_ID | DATA_BOX_ID | REASON_HEARTBEAT,
+    .Reason = REASON_HEARTBEAT,
   };
 
   uint32_t last_tick = 0;
