@@ -226,18 +226,19 @@ void sendHeartbeatTask(void *arg) {
     data[1] = (ticks & 0x0000FF00) >> 4;
     data[2] = (ticks & 0x00FF0000) >> 12;
     data[3] = (ticks & 0xFF000000) >> 28;
-
-    msg.data = data;
-
+    
     last_tick = ticks - last_tick;
-
+    
+    // Bits 4-7 have ticks since last heartbeat
     data[4] = last_tick & 0x000000FF;
     data[5] = (last_tick & 0x0000FF00) >> 4;
     data[6] = (last_tick & 0x00FF0000) >> 12;
     data[7] = (last_tick & 0xFF000000) >> 28;
-
+    
     osMessageQueuePut(CANTxQueueHandle, &msg, 5, osWaitForever); // is &msg a no no?
-
+    
+    msg.data = data;
+    
     last_tick = ticks;
 
     osDelayUntil(osKernelGetTickCount() + MS_TO_TICKS(5000)); // Send heartbeat every 5 sec
