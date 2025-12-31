@@ -1,0 +1,31 @@
+VERSION ""
+
+NS_ :
+
+BS_:
+
+BU_: DAQ_Engine_Bay
+
+BO_ 33554688 DAQ_Engine_Bay_Msg0: 8 DAQ_Engine_Bay
+ SG_ Coolant_Temp : 0|16@1- (0.1,-40.0) [-40.0|150.0] "degC" Vector__XXX
+ SG_ Oil_Temp : 16|16@1- (0.1,-40.0) [-40.0|150.0] "degC" Vector__XXX
+ SG_ Battery_Voltage : 32|16@1- (0.001,0.0) [0.0|16.0] "V" Vector__XXX
+ SG_ Throttle_Position : 48|16@1- (0.1,0.0) [0.5|4.5] "V" Vector__XXX
+
+BO_ 33554689 DAQ_Engine_Bay_Msg1: 1 DAQ_Engine_Bay
+ SG_ Brake_Switch : 0|1@1- (1.0,0.0) [0|1] "" Vector__XXX
+ SG_ Clutch_Switch : 1|1@1- (1.0,0.0) [0|1] "" Vector__XXX
+
+CM_ 
+CM_ BU_ DAQ_Engine_Bay "Data acquisition module";
+CM_ BO_ 33554688 "DAQ_Engine_Bay_Msg0 message";
+CM_ SG_ 33554688 Coolant_Temp "Coolant_Temp sensor signal";
+CM_ SG_ 33554688 Oil_Temp "Oil_Temp sensor signal";
+CM_ SG_ 33554688 Battery_Voltage "Battery_Voltage sensor signal";
+CM_ SG_ 33554688 Throttle_Position "Throttle_Position sensor signal";
+CM_ BO_ 33554689 "DAQ_Engine_Bay_Msg1 message";
+CM_ SG_ 33554689 Brake_Switch "Brake_Switch sensor signal";
+CM_ SG_ 33554689 Clutch_Switch "Clutch_Switch sensor signal";
+
+BA_DEF_ BO_ "GenMsgCycleTime" INT 0 10000;
+BA_DEF_DEF_ "GenMsgCycleTime" 100;

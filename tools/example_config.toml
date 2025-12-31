@@ -1,0 +1,67 @@
+# Example Data Acquisition Module Configuration
+# ==============================================
+
+[module]
+identifier = "DAQ_Engine_Bay"
+func_grp = 0x2          # CAN ExtID function group (0x0 to 0xF)
+rtos_tick_hz = 1000     # FreeRTOS tick frequency
+
+# ------------------------------------------------------------------------------
+# Sensors
+# ------------------------------------------------------------------------------
+# Each [[module.sensors]] block defines a sensor connected to this module.
+# Common parameters available for all sensor types:
+#   - name: string (optional) - Signal name in DBC. Auto-generated if not provided.
+#   - type: string (optional) - Sensor archetype. Default: "analog"
+#   - offset: float (optional) - DBC signal offset. Default: 0.0
+#   - scale: float (optional) - DBC signal scale factor. Default: 1.0
+#   - bit_length: int (optional) - Signal bit width. Default: 16
+#   - byte_order: string (optional) - "little_endian" or "big_endian". Default: "little_endian"
+#   - is_signed: bool (optional) - Signed/unsigned signal. Default: true
+
+[[module.sensors]]
+name = "Coolant_Temp"
+type = "thermistor"
+offset = -40.0
+scale = 0.1
+# Thermistor-specific parameters (Steinhart-Hart coefficients)
+A = 0.001129148
+B = 0.000234125
+C = 0.0000000876741
+pull_up = 10000.0       # Pull-up resistor value in ohms
+
+[[module.sensors]]
+name = "Oil_Temp"
+type = "thermistor"
+offset = -40.0
+scale = 0.1
+A = 0.001129148
+B = 0.000234125
+C = 0.0000000876741
+pull_up = 10000.0
+
+[[module.sensors]]
+name = "Battery_Voltage"
+type = "analog"
+scale = 0.001           # mV resolution
+offset = 0.0
+min_voltage = 0.0
+max_voltage = 16.0
+
+[[module.sensors]]
+name = "Throttle_Position"
+type = "analog"
+scale = 0.1             # 0.1% resolution
+offset = 0.0
+min_voltage = 0.5
+max_voltage = 4.5
+
+[[module.sensors]]
+name = "Brake_Switch"
+type = "digital"
+bit_length = 1
+
+[[module.sensors]]
+name = "Clutch_Switch"
+type = "digital"
+bit_length = 1
